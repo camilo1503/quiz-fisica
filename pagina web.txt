@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz final de Física II</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #d0e7ff, #ffffff);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 12px;
+      padding: 20px 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #003366;
+    }
+    .question {
+      margin-top: 20px;
+    }
+    .question p {
+      font-weight: bold;
+    }
+    .answers label {
+      display: block;
+      margin-bottom: 8px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #007acc;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .footer {
+      text-align: right;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #666;
+    }
+    .results {
+      margin-top: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz final de Física II</h1>
+
+    <div id="start">
+      <h3>Ingrese su tarjeta y nombre completo</h3>
+      <input type="text" id="card" placeholder="Tarjeta" required><br><br>
+      <input type="text" id="name" placeholder="Nombre completo" required><br><br>
+      <button onclick="startQuiz()">Iniciar Quiz</button>
+    </div>
+
+    <form id="quiz" class="hidden">
+      <!-- Preguntas -->
+    </form>
+
+    <div id="results" class="hidden"></div>
+
+    <div id="ranking" class="hidden">
+      <h3>Clasificación de participantes</h3>
+      <table id="rankingTable">
+        <thead>
+          <tr><th>Nombre</th><th>Nota</th><th>Revisión</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="footer">by Daniel Camilo Ruiz Rodríguez</div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "¿Qué magnitud física determina el tono de un sonido?", a: "Frecuencia", options: ["Intensidad", "Frecuencia", "Amplitud", "Longitud de onda"] },
+      { q: "¿Cómo se propaga el sonido?", a: "A través de ondas longitudinales", options: ["Solo en el vacío", "A través de ondas electromagnéticas", "A través de ondas longitudinales", "De manera instantánea"] },
+      { q: "¿Qué tipo de onda es la luz?", a: "Electromagnética", options: ["Longitudinal", "Mecánica", "Electromagnética", "Sonora"] },
+      { q: "¿Cuál es la unidad de medida del nivel de intensidad sonora?", a: "Decibelio", options: ["Hertz", "Newton", "Julio", "Decibelio"] },
+      { q: "¿Qué fenómeno óptico explica la formación del arcoíris?", a: "Dispersión", options: ["Difracción", "Polarización", "Reflexión", "Dispersión"] },
+      { q: "¿Qué ocurre cuando una onda pasa de un medio a otro con diferente densidad?", a: "Se refracta", options: ["Refleja completamente", "Se absorbe", "No cambia su velocidad", "Se refracta"] },
+      { q: "¿Qué es la longitud de onda?", a: "La distancia entre dos crestas consecutivas", options: ["El número de oscilaciones por segundo", "La distancia entre dos crestas consecutivas", "El tiempo que tarda en recorrer una distancia", "La intensidad de una onda"] },
+      { q: "¿Qué fenómeno explica el cambio de tono de una sirena cuando pasa un vehículo?", a: "Efecto Doppler", options: ["Reverberación", "Eco", "Efecto Doppler", "Absorción"] },
+    ];
+
+    let userAnswers = [];
+    let users = JSON.parse(localStorage.getItem("quizUsers")) || [];
+
+    function startQuiz() {
+      const name = document.getElementById("name").value.trim();
+      const card = document.getElementById("card").value.trim();
+      if (!name || !card) return alert("Por favor ingrese todos los datos.");
+
+      document.getElementById("start").classList.add("hidden");
+      const quizForm = document.getElementById("quiz");
+      quizForm.innerHTML = "";
+      questions.forEach((q, index) => {
+        let html = `<div class='question'><p>${index + 1}. ${q.q}</p><div class='answers'>`;
+        q.options.forEach(opt => {
+          html += `<label><input type='radio' name='q${index}' value='${opt}' required> ${opt}</label>`;
+        });
+        html += `</div></div>`;
+        quizForm.innerHTML += html;
+      });
+      quizForm.innerHTML += `<br><button type='submit'>Enviar</button>`;
+      quizForm.classList.remove("hidden");
+      quizForm.onsubmit = function(event) {
+        event.preventDefault();
+        submitQuiz(name);
+      };
+    }
+
+    function submitQuiz(userName) {
+      userAnswers = [];
+      let correct = 0;
+      let revision = "<ul>";
+
+      questions.forEach((q, i) => {
+        const ans = document.querySelector(`input[name='q${i}']:checked`).value;
+        userAnswers.push(ans);
+        const isCorrect = ans === q.a;
+        if (isCorrect) correct++;
+        revision += `<li>${i + 1}. ${q.q}<br>Tu respuesta: <strong>${ans}</strong> ${isCorrect ? '✅' : '❌'}<br>Correcta: <strong>${q.a}</strong></li>`;
+      });
+      revision += "</ul>";
+      const nota = Math.round((correct / questions.length) * 4) + 1;
+
+      // Mostrar resultados
+      document.getElementById("quiz").classList.add("hidden");
+      const res = document.getElementById("results");
+      res.innerHTML = `<h3>Resultados de ${userName}</h3><p>Nota: <strong>${nota}</strong></p>${revision}<br><button onclick='showRanking()'>Ver Clasificación</button><button onclick='location.reload()'>Volver al inicio</button>`;
+      res.classList.remove("hidden");
+
+      users.push({ nombre: userName, nota: nota, revision });
+      localStorage.setItem("quizUsers", JSON.stringify(users));
+    }
+
+    function showRanking() {
+      document.getElementById("results").classList.add("hidden");
+      const tableBody = document.querySelector("#rankingTable tbody");
+      tableBody.innerHTML = "";
+      users.forEach(u => {
+        const row = `<tr><td>${u.nombre}</td><td>${u.nota}</td><td>${u.revision}</td></tr>`;
+        tableBody.innerHTML += row;
+      });
+      document.getElementById("ranking").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
