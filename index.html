@@ -120,77 +120,135 @@
 
   <section id="dashboard">
     <h2>Dashboard</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Saldo actual</h3>
-        <p>$3.200.000</p>
-      </div>
-      <div class="card">
-        <h3>Gasto mensual</h3>
-        <p>$1.050.000</p>
-      </div>
-      <div class="card">
-        <h3>Ahorro</h3>
-        <p>$1.500.000</p>
-      </div>
-      <div class="card">
-        <h3>Suscripciones</h3>
-        <p>Spotify, Netflix, Adobe</p>
-      </div>
+    <div class="grid" id="dashboardCards">
+      <!-- Cards se generan dinámicamente -->
     </div>
   </section>
 
   <section id="metas">
     <h2>Metas financieras</h2>
-    <form>
+    <form onsubmit="guardarMeta(event)">
       <div class="form-control">
         <label>Nombre de la meta:</label>
-        <input type="text" placeholder="Ej. Comprar portátil" />
+        <input type="text" id="nombreMeta" placeholder="Ej. Comprar portátil" required />
       </div>
       <div class="form-control">
         <label>Monto objetivo:</label>
-        <input type="number" placeholder="$2.000.000" />
+        <input type="number" id="montoMeta" placeholder="$2.000.000" required />
       </div>
-      <button>Guardar meta</button>
+      <button type="submit">Guardar meta</button>
     </form>
+    <div id="listaMetas"></div>
   </section>
 
   <section id="inversiones">
     <h2>Portafolio de inversión</h2>
-    <form>
+    <form onsubmit="guardarInversion(event)">
       <div class="form-control">
         <label>Nombre del activo:</label>
-        <input type="text" placeholder="Ej. Fondo indexado" />
+        <input type="text" id="nombreActivo" placeholder="Ej. Fondo indexado" required />
       </div>
       <div class="form-control">
         <label>Monto invertido:</label>
-        <input type="number" placeholder="$500.000" />
+        <input type="number" id="montoInvertido" placeholder="$500.000" required />
       </div>
       <div class="form-control">
         <label>Rentabilidad estimada (%):</label>
-        <input type="number" placeholder="8" />
+        <input type="number" id="rentabilidad" placeholder="8" required />
       </div>
-      <button>Actualizar portafolio</button>
+      <button type="submit">Actualizar portafolio</button>
     </form>
+    <div id="listaInversiones"></div>
   </section>
 
   <section id="carpetas">
     <h2>Carpetas de proyectos</h2>
-    <form>
+    <form onsubmit="crearCarpeta(event)">
       <div class="form-control">
         <label>Nombre del proyecto:</label>
-        <input type="text" placeholder="Ej. Viaje a Cartagena" />
+        <input type="text" id="nombreProyecto" placeholder="Ej. Viaje a Cartagena" required />
       </div>
       <div class="form-control">
         <label>Descripción:</label>
-        <textarea placeholder="Detalles del presupuesto, fechas, etc."></textarea>
+        <textarea id="descripcionProyecto" placeholder="Detalles del presupuesto, fechas, etc." required></textarea>
       </div>
-      <button>Crear carpeta</button>
+      <button type="submit">Crear carpeta</button>
     </form>
+    <div id="listaCarpetas"></div>
   </section>
 
   <footer>
-    <p>&copy; 2025 PFA IA APP - Desarrollado por Camilo & Daniel</p>
+    <p>&copy; 2025 PFA IA APP - Desarrollado por Camilo & Joshep</p>
   </footer>
+
+  <script>
+    const metas = JSON.parse(localStorage.getItem('metas')) || [];
+    const inversiones = JSON.parse(localStorage.getItem('inversiones')) || [];
+    const carpetas = JSON.parse(localStorage.getItem('carpetas')) || [];
+
+    function guardarMeta(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('nombreMeta').value;
+      const monto = document.getElementById('montoMeta').value;
+      metas.push({ nombre, monto });
+      localStorage.setItem('metas', JSON.stringify(metas));
+      mostrarMetas();
+      e.target.reset();
+    }
+
+    function mostrarMetas() {
+      const contenedor = document.getElementById('listaMetas');
+      contenedor.innerHTML = metas.map(m => `<p><strong>${m.nombre}</strong>: $${m.monto}</p>`).join('');
+    }
+
+    function guardarInversion(e) {
+      e.preventDefault();
+      const activo = document.getElementById('nombreActivo').value;
+      const monto = document.getElementById('montoInvertido').value;
+      const rentabilidad = document.getElementById('rentabilidad').value;
+      inversiones.push({ activo, monto, rentabilidad });
+      localStorage.setItem('inversiones', JSON.stringify(inversiones));
+      mostrarInversiones();
+      e.target.reset();
+    }
+
+    function mostrarInversiones() {
+      const contenedor = document.getElementById('listaInversiones');
+      contenedor.innerHTML = inversiones.map(i => `<p><strong>${i.activo}</strong>: $${i.monto} (${i.rentabilidad}%)</p>`).join('');
+    }
+
+    function crearCarpeta(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('nombreProyecto').value;
+      const descripcion = document.getElementById('descripcionProyecto').value;
+      carpetas.push({ nombre, descripcion });
+      localStorage.setItem('carpetas', JSON.stringify(carpetas));
+      mostrarCarpetas();
+      e.target.reset();
+    }
+
+    function mostrarCarpetas() {
+      const contenedor = document.getElementById('listaCarpetas');
+      contenedor.innerHTML = carpetas.map(c => `<p><strong>${c.nombre}</strong>: ${c.descripcion}</p>`).join('');
+    }
+
+    function cargarDashboard() {
+      const cards = document.getElementById('dashboardCards');
+      const saldo = inversiones.reduce((acc, inv) => acc + parseFloat(inv.monto || 0), 0);
+      const gasto = metas.reduce((acc, meta) => acc + parseFloat(meta.monto || 0), 0);
+      cards.innerHTML = `
+        <div class="card"><h3>Saldo total invertido</h3><p>$${saldo}</p></div>
+        <div class="card"><h3>Objetivos de ahorro</h3><p>$${gasto}</p></div>
+        <div class="card"><h3>Proyectos activos</h3><p>${carpetas.length}</p></div>
+      `;
+    }
+
+    window.onload = () => {
+      mostrarMetas();
+      mostrarInversiones();
+      mostrarCarpetas();
+      cargarDashboard();
+    }
+  </script>
 </body>
 </html>
