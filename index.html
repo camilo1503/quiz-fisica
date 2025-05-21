@@ -1,195 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz final de Física II</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PFA IA App - Finanzas Inteligentes</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #d0e7ff, #ffffff);
       margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #1e1e2f;
+      color: #f4f4f4;
+    }
+    header {
+      background: #282845;
+      padding: 1rem;
+      text-align: center;
+    }
+    h1 {
+      color: #00ffa3;
     }
     .container {
       max-width: 800px;
-      margin: 40px auto;
-      background: white;
-      border-radius: 12px;
-      padding: 20px 30px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin: auto;
+      padding: 1rem;
     }
-    h1 {
-      text-align: center;
-      color: #003366;
+    .card {
+      background: #2b2b3c;
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-    .question {
-      margin-top: 20px;
+    .card h2 {
+      color: #00d0ff;
     }
-    .question p {
-      font-weight: bold;
-    }
-    .answers label {
+    label, input, button {
       display: block;
-      margin-bottom: 8px;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    input, textarea {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: none;
     }
     button {
-      padding: 10px 20px;
+      background: #00ffa3;
+      color: #000;
+      font-weight: bold;
+      padding: 0.7rem;
       border: none;
-      background-color: #007acc;
-      color: white;
-      font-size: 16px;
+      border-radius: 5px;
+      margin-top: 1rem;
       cursor: pointer;
-      border-radius: 8px;
-      margin-right: 10px;
     }
-    .footer {
-      text-align: right;
-      margin-top: 20px;
-      font-size: 12px;
-      color: #666;
-    }
-    .results {
-      margin-top: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 12px;
+    .tip {
+      background: #00d0ff;
+      color: #000;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 1rem;
       text-align: center;
+      animation: fadeIn 1s ease-in-out;
     }
-    th {
-      background-color: #007acc;
-      color: white;
-    }
-    .hidden {
-      display: none;
-    }
-    .stars {
-      color: #ffcc00;
-      font-size: 18px;
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>PFA IA APP</h1>
+    <p>Tu asistente inteligente de finanzas personales</p>
+  </header>
+
   <div class="container">
-    <h1>Quiz final de Física II</h1>
-
-    <div id="start">
-      <h3>Ingrese su tarjeta y nombre completo</h3>
-      <input type="text" id="card" placeholder="Tarjeta" required><br><br>
-      <input type="text" id="name" placeholder="Nombre completo" required><br><br>
-      <button onclick="startQuiz()">Iniciar Quiz</button>
+    <div class="card">
+      <h2>Meta Financiera</h2>
+      <form id="goalForm">
+        <label for="meta">¿Qué deseas lograr?</label>
+        <input type="text" id="meta" required />
+        
+        <label for="monto">¿Cuánto necesitas ahorrar? (COP)</label>
+        <input type="number" id="monto" required />
+        
+        <button type="submit">Crear meta</button>
+      </form>
     </div>
 
-    <form id="quiz" class="hidden"></form>
-
-    <div id="results" class="hidden"></div>
-
-    <div id="ranking" class="hidden">
-      <h3>Clasificación de participantes</h3>
-      <table id="rankingTable">
-        <thead>
-          <tr><th>Nombre</th><th>Nota</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <br>
-      <button onclick="resetToStart()">Volver al inicio</button>
+    <div class="card">
+      <h2>Recomendación de la IA</h2>
+      <div id="aiTip" class="tip">Haz clic abajo para obtener una sugerencia.</div>
+      <button onclick="getTip()">Nueva sugerencia</button>
     </div>
-
-    <div class="footer">by Daniel Camilo Ruiz Rodríguez</div>
   </div>
 
   <script>
-    const questions = [
-      { q: "¿Qué magnitud física determina el tono de un sonido?", a: "Frecuencia", options: ["Intensidad", "Frecuencia", "Amplitud", "Longitud de onda"] },
-      { q: "¿Cómo se propaga el sonido?", a: "A través de ondas longitudinales", options: ["Solo en el vacío", "A través de ondas electromagnéticas", "A través de ondas longitudinales", "De manera instantánea"] },
-      { q: "¿Qué tipo de onda es la luz?", a: "Electromagnética", options: ["Longitudinal", "Mecánica", "Electromagnética", "Sonora"] },
-      { q: "¿Cuál es la unidad de medida del nivel de intensidad sonora?", a: "Decibelio", options: ["Hertz", "Newton", "Julio", "Decibelio"] },
-      { q: "¿Qué fenómeno óptico explica la formación del arcoíris?", a: "Dispersión", options: ["Difracción", "Polarización", "Reflexión", "Dispersión"] },
-      { q: "¿Qué ocurre cuando una onda pasa de un medio a otro con diferente densidad?", a: "Se refracta", options: ["Refleja completamente", "Se absorbe", "No cambia su velocidad", "Se refracta"] },
-      { q: "¿Qué es la longitud de onda?", a: "La distancia entre dos crestas consecutivas", options: ["El número de oscilaciones por segundo", "La distancia entre dos crestas consecutivas", "El tiempo que tarda en recorrer una distancia", "La intensidad de una onda"] },
-      { q: "¿Qué fenómeno explica el cambio de tono de una sirena cuando pasa un vehículo?", a: "Efecto Doppler", options: ["Reverberación", "Eco", "Efecto Doppler", "Absorción"] },
+    const tips = [
+      "Cancela suscripciones que no uses con frecuencia.",
+      "Define un presupuesto mensual y cíñete a él.",
+      "Evita compras impulsivas. Espera 24h antes de comprar.",
+      "Usa apps de cashback y recompensas para tus compras.",
+      "Invierte en ti mismo: cursos, habilidades o salud."
     ];
 
-    let userAnswers = [];
-    let users = JSON.parse(localStorage.getItem("quizUsers")) || [];
-
-    function startQuiz() {
-      const name = document.getElementById("name").value.trim();
-      const card = document.getElementById("card").value.trim();
-      if (!name || !card) return alert("Por favor ingrese todos los datos.");
-
-      document.getElementById("start").classList.add("hidden");
-      const quizForm = document.getElementById("quiz");
-      quizForm.innerHTML = "";
-      questions.forEach((q, index) => {
-        let html = `<div class='question'><p>${index + 1}. ${q.q}</p><div class='answers'>`;
-        q.options.forEach(opt => {
-          html += `<label><input type='radio' name='q${index}' value='${opt}' required> ${opt}</label>`;
-        });
-        html += `</div></div>`;
-        quizForm.innerHTML += html;
-      });
-      quizForm.innerHTML += `<br><button type='submit'>Enviar</button>`;
-      quizForm.classList.remove("hidden");
-      quizForm.onsubmit = function(event) {
-        event.preventDefault();
-        submitQuiz(name);
-      };
+    function getTip() {
+      const randomIndex = Math.floor(Math.random() * tips.length);
+      document.getElementById("aiTip").textContent = tips[randomIndex];
     }
 
-    function submitQuiz(userName) {
-      userAnswers = [];
-      let correct = 0;
-
-      questions.forEach((q, i) => {
-        const ans = document.querySelector(`input[name='q${i}']:checked`).value;
-        userAnswers.push(ans);
-        if (ans === q.a) correct++;
-      });
-
-      const nota = Math.round((correct / questions.length) * 4) + 1;
-
-      document.getElementById("quiz").classList.add("hidden");
-      const res = document.getElementById("results");
-      res.innerHTML = `<h3>Resultados de ${userName}</h3><p>Nota: <strong>${nota}</strong> <span class="stars">${"★".repeat(nota)}${"☆".repeat(5 - nota)}</span></p><br><button onclick='showRanking()'>Ver Clasificación</button><button onclick='resetToStart()'>Volver al inicio</button>`;
-      res.classList.remove("hidden");
-
-      users.push({ nombre: userName, nota });
-      localStorage.setItem("quizUsers", JSON.stringify(users));
-    }
-
-    function showRanking() {
-      document.getElementById("results").classList.add("hidden");
-      const tableBody = document.querySelector("#rankingTable tbody");
-      tableBody.innerHTML = "";
-      users.forEach(u => {
-        const stars = "★".repeat(u.nota) + "☆".repeat(5 - u.nota);
-        const row = `<tr><td>${u.nombre}</td><td><span class='stars'>${stars}</span></td></tr>`;
-        tableBody.innerHTML += row;
-      });
-      document.getElementById("ranking").classList.remove("hidden");
-    }
-
-    function resetToStart() {
-      document.getElementById("start").classList.remove("hidden");
-      document.getElementById("quiz").classList.add("hidden");
-      document.getElementById("results").classList.add("hidden");
-      document.getElementById("ranking").classList.add("hidden");
-      document.getElementById("card").value = "";
-      document.getElementById("name").value = "";
-    }
+    document.getElementById("goalForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const meta = document.getElementById("meta").value;
+      const monto = document.getElementById("monto").value;
+      alert(`Meta creada: "${meta}" con un ahorro de $${monto}`);
+      this.reset();
+    });
   </script>
 </body>
 </html>
+
