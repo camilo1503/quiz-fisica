@@ -2,204 +2,195 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PFA IA APP - Asesor Financiero</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PFA IA App - Finanzas Inteligentes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <style>
     * {
       box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
     }
     body {
       margin: 0;
-      background-color: #111827;
-      color: #f9fafb;
+      font-family: 'Poppins', sans-serif;
+      background-color: #0f172a;
+      color: #f1f5f9;
     }
     header {
-      background-color: #1f2937;
-      padding: 1rem 2rem;
+      background: linear-gradient(to right, #14b8a6, #0ea5e9);
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      color: white;
     }
     header h1 {
       margin: 0;
-      color: #10b981;
+      font-size: 1.8rem;
     }
-    nav button {
-      margin-left: 1rem;
-      padding: 0.6rem 1rem;
-      background: #10b981;
-      color: #111;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .container {
-      max-width: 1000px;
-      margin: auto;
-      padding: 2rem;
-    }
-    .section {
-      background-color: #1f2937;
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.3);
-    }
-    .section h2 {
-      color: #38bdf8;
-    }
-    .section label {
-      display: block;
-      margin-top: 1rem;
-    }
-    .section input, .section textarea, .section select {
-      width: 100%;
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: none;
-      margin-top: 0.4rem;
-    }
-    .section button {
-      margin-top: 1rem;
-      background: #3b82f6;
+    nav a {
+      margin-left: 1.5rem;
+      text-decoration: none;
       color: white;
-      border: none;
-      padding: 0.7rem 1.5rem;
-      border-radius: 8px;
-      cursor: pointer;
+      font-weight: 600;
+      transition: color 0.3s;
     }
-    .tip {
-      margin-top: 1rem;
-      background: #10b981;
-      color: #111;
-      padding: 1rem;
-      border-radius: 10px;
-      text-align: center;
+    nav a:hover {
+      color: #0f172a;
+    }
+    section {
+      padding: 3rem 2rem;
+      transition: all 0.5s ease-in-out;
+    }
+    .hero {
+      background: url('https://images.unsplash.com/photo-1605902711622-cfb43c4437d1?auto=format&fit=crop&w=1050&q=80') no-repeat center/cover;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 1px 1px 5px black;
+    }
+    .hero h2 {
+      font-size: 3rem;
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1rem;
+      gap: 1.5rem;
     }
     .card {
-      background-color: #334155;
-      padding: 1rem;
-      border-radius: 10px;
+      background-color: #1e293b;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.03);
+    }
+    .card h3 {
+      color: #38bdf8;
+    }
+    .form-control {
+      margin-bottom: 1rem;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.7rem;
+      border: none;
+      border-radius: 8px;
+    }
+    button {
+      background: #0ea5e9;
+      border: none;
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #0284c7;
+    }
+    footer {
+      background-color: #1e293b;
       text-align: center;
+      padding: 2rem;
+      color: #94a3b8;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>PFA IA APP</h1>
+    <h1><i class="fas fa-piggy-bank"></i> PFA IA App</h1>
     <nav>
-      <button onclick="scrollToSection('dashboard')">Inicio</button>
-      <button onclick="scrollToSection('metas')">Metas</button>
-      <button onclick="scrollToSection('ia')">IA</button>
-      <button onclick="scrollToSection('historial')">Historial</button>
-      <button onclick="scrollToSection('simulador')">Simulador</button>
+      <a href="#inicio">Inicio</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#metas">Metas</a>
+      <a href="#inversiones">Portafolio</a>
+      <a href="#carpetas">Carpetas</a>
     </nav>
   </header>
 
-  <div class="container">
-    <div id="dashboard" class="section">
-      <h2>💼 Dashboard Financiero</h2>
-      <div class="grid">
-        <div class="card"><strong>Saldo disponible</strong><br>$2.500.000</div>
-        <div class="card"><strong>Gastos este mes</strong><br>$780.000</div>
-        <div class="card"><strong>Suscripciones</strong><br>Netflix, Spotify, Prime</div>
-        <div class="card"><strong>Ahorro actual</strong><br>$1.200.000</div>
+  <section id="inicio" class="hero">
+    <h2>Asistente financiero inteligente a tu servicio</h2>
+  </section>
+
+  <section id="dashboard">
+    <h2>Dashboard</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Saldo actual</h3>
+        <p>$3.200.000</p>
+      </div>
+      <div class="card">
+        <h3>Gasto mensual</h3>
+        <p>$1.050.000</p>
+      </div>
+      <div class="card">
+        <h3>Ahorro</h3>
+        <p>$1.500.000</p>
+      </div>
+      <div class="card">
+        <h3>Suscripciones</h3>
+        <p>Spotify, Netflix, Adobe</p>
       </div>
     </div>
+  </section>
 
-    <div id="metas" class="section">
-      <h2>🎯 Crear Meta Financiera</h2>
-      <form onsubmit="crearMeta(event)">
-        <label>Nombre de la meta</label>
-        <input type="text" id="nombreMeta" required>
+  <section id="metas">
+    <h2>Metas financieras</h2>
+    <form>
+      <div class="form-control">
+        <label>Nombre de la meta:</label>
+        <input type="text" placeholder="Ej. Comprar portátil" />
+      </div>
+      <div class="form-control">
+        <label>Monto objetivo:</label>
+        <input type="number" placeholder="$2.000.000" />
+      </div>
+      <button>Guardar meta</button>
+    </form>
+  </section>
 
-        <label>Monto objetivo (COP)</label>
-        <input type="number" id="montoMeta" required>
+  <section id="inversiones">
+    <h2>Portafolio de inversión</h2>
+    <form>
+      <div class="form-control">
+        <label>Nombre del activo:</label>
+        <input type="text" placeholder="Ej. Fondo indexado" />
+      </div>
+      <div class="form-control">
+        <label>Monto invertido:</label>
+        <input type="number" placeholder="$500.000" />
+      </div>
+      <div class="form-control">
+        <label>Rentabilidad estimada (%):</label>
+        <input type="number" placeholder="8" />
+      </div>
+      <button>Actualizar portafolio</button>
+    </form>
+  </section>
 
-        <label>Plazo estimado (meses)</label>
-        <input type="number" id="plazoMeta" required>
+  <section id="carpetas">
+    <h2>Carpetas de proyectos</h2>
+    <form>
+      <div class="form-control">
+        <label>Nombre del proyecto:</label>
+        <input type="text" placeholder="Ej. Viaje a Cartagena" />
+      </div>
+      <div class="form-control">
+        <label>Descripción:</label>
+        <textarea placeholder="Detalles del presupuesto, fechas, etc."></textarea>
+      </div>
+      <button>Crear carpeta</button>
+    </form>
+  </section>
 
-        <button type="submit">Guardar Meta</button>
-      </form>
-      <div id="metaGuardada" class="tip" style="display: none;"></div>
-    </div>
-
-    <div id="ia" class="section">
-      <h2>🤖 Asistente Inteligente</h2>
-      <p>Haz clic para recibir una sugerencia personalizada:</p>
-      <button onclick="generarTip()">Obtener sugerencia</button>
-      <div id="sugerenciaIA" class="tip">🧠 Sugerencias personalizadas aparecerán aquí.</div>
-    </div>
-
-    <div id="historial" class="section">
-      <h2>📊 Historial de Gastos</h2>
-      <ul>
-        <li>Transporte: $120.000</li>
-        <li>Comida: $300.000</li>
-        <li>Servicios públicos: $180.000</li>
-        <li>Entretenimiento: $180.000</li>
-      </ul>
-    </div>
-
-    <div id="simulador" class="section">
-      <h2>📈 Simulador de Inversión</h2>
-      <label>Monto a invertir (COP)</label>
-      <input type="number" id="inversion" placeholder="Ej: 500000">
-      <label>Interés anual estimado (%)</label>
-      <input type="number" id="interes" value="8">
-      <label>Duración (años)</label>
-      <input type="number" id="anios" value="3">
-      <button onclick="simular()">Simular</button>
-      <div id="resultadoSimulador" class="tip" style="display: none;"></div>
-    </div>
-  </div>
-
-  <script>
-    const tips = [
-      "Reduce gastos fijos renegociando tus servicios.",
-      "Evita pagar intereses: paga tus tarjetas a tiempo.",
-      "Usa un 50/30/20: 50% necesidades, 30% deseos, 20% ahorro.",
-      "Usa efectivo si tiendes a gastar mucho con tarjeta.",
-      "Registra todos tus gastos diarios por una semana."
-    ];
-
-    function generarTip() {
-      const randomIndex = Math.floor(Math.random() * tips.length);
-      document.getElementById("sugerenciaIA").textContent = "💡 " + tips[randomIndex];
-    }
-
-    function crearMeta(e) {
-      e.preventDefault();
-      const nombre = document.getElementById("nombreMeta").value;
-      const monto = document.getElementById("montoMeta").value;
-      const plazo = document.getElementById("plazoMeta").value;
-      const mensaje = `Meta "${nombre}" creada: Ahorra $${monto} en ${plazo} meses.`;
-      document.getElementById("metaGuardada").style.display = "block";
-      document.getElementById("metaGuardada").textContent = mensaje;
-    }
-
-    function simular() {
-      const inversion = parseFloat(document.getElementById("inversion").value);
-      const interes = parseFloat(document.getElementById("interes").value) / 100;
-      const anios = parseInt(document.getElementById("anios").value);
-      if (!inversion || !interes || !anios) return;
-      const resultado = inversion * Math.pow(1 + interes, anios);
-      const mensaje = `En ${anios} años podrías tener aproximadamente $${resultado.toFixed(2)} COP.`;
-      const resultadoDiv = document.getElementById("resultadoSimulador");
-      resultadoDiv.textContent = mensaje;
-      resultadoDiv.style.display = "block";
-    }
-
-    function scrollToSection(id) {
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-    }
-  </script>
+  <footer>
+    <p>&copy; 2025 PFA IA APP - Desarrollado por Camilo & Joshep</p>
+  </footer>
 </body>
 </html>
